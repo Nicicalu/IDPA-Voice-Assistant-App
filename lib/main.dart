@@ -1,7 +1,7 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
-import 'package:voice_assistant/login.dart';
+import 'package:voice_assistant/pages/login.dart';
 
 void main() {
   runApp(MyApp());
