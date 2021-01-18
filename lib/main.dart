@@ -1,7 +1,8 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
-import 'package:voice_assistant/pages/login.dart';
+import 'package:voice_assistant/pages/loginPage.dart';
+import 'package:voice_assistant/pages/welcomePage.dart';
 
 void main() {
   runApp(MyApp());
@@ -82,7 +83,8 @@ class _SpeechScreenState extends State<SpeechScreen> {
           print('onStatus: $val');
           if (val == "notListening") {
             print("Stop ---- $_text");
-
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => WelcomePage()));
             setState(() {
               print("----------------");
               _isListening = false;
