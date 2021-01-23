@@ -24,7 +24,7 @@ class _SignUpPageState extends State<SignUpPage> {
           children: <Widget>[
             Container(
               padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
-              child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
+              child: Icon(Icons.keyboard_arrow_left),
             ),
             Text('Back',
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))
@@ -48,6 +48,7 @@ class _SignUpPageState extends State<SignUpPage> {
             height: 10,
           ),
           TextField(
+              style: TextStyle(color: Colors.black),
               obscureText: isPassword,
               decoration: InputDecoration(
                   border: InputBorder.none,
@@ -67,7 +68,8 @@ class _SignUpPageState extends State<SignUpPage> {
           borderRadius: BorderRadius.all(Radius.circular(5)),
           boxShadow: <BoxShadow>[
             BoxShadow(
-                color: Colors.grey.shade200,
+                //color: Colors.grey.shade200,
+                color: Theme.of(context).backgroundColor,
                 offset: Offset(2, 4),
                 blurRadius: 5,
                 spreadRadius: 2)

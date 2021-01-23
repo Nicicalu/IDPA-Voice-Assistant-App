@@ -5,6 +5,7 @@ import 'package:voice_assistant/pages/welcomePage.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:voice_assistant/models/main_model.dart';
 import 'package:voice_assistant/helper/string_extension.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,9 +18,15 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Voice',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.orange,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+          primarySwatch: Colors.orange,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          backgroundColor: const Color(0xFFE5E5E5)),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        backgroundColor: const Color(0xFF212121),
+        /* dark theme settings */
       ),
+      themeMode: ThemeMode.system,
       home: WelcomePage(),
     );
   }
@@ -48,8 +55,10 @@ class _SpeechScreenState extends State<SpeechScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-            'Zuversicht: ${(_confidence * 100.0).toStringAsFixed(1)}% $_isListening'),
+        backgroundColor: Theme.of(context).backgroundColor,
+        title: SizedBox(
+          child: _title(),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: AvatarGlow(
@@ -65,7 +74,8 @@ class _SpeechScreenState extends State<SpeechScreen> {
             child: Container(
               width: 60,
               height: 60,
-              child: Icon(_isListening ? Icons.mic : Icons.mic_none),
+              child: Icon(_isListening ? Icons.mic : Icons.mic_none,
+                  color: Colors.white),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: LinearGradient(
@@ -85,7 +95,6 @@ class _SpeechScreenState extends State<SpeechScreen> {
             _text,
             style: const TextStyle(
               fontSize: 32.0,
-              color: Colors.black,
               fontWeight: FontWeight.w400,
             ),
           ),
@@ -127,5 +136,29 @@ class _SpeechScreenState extends State<SpeechScreen> {
       setState(() => _isListening = false);
       _speech.stop();
     }
+  }
+
+  Widget _title() {
+    return RichText(
+      textAlign: TextAlign.center,
+      text: TextSpan(
+          text: 'BM',
+          style: GoogleFonts.portLligatSans(
+            textStyle: Theme.of(context).textTheme.headline4,
+            fontSize: 30,
+            fontWeight: FontWeight.w700,
+            color: Color(0xffe46b10),
+          ),
+          children: [
+            TextSpan(
+              text: 'Voice',
+              style: TextStyle(color: Colors.black, fontSize: 30),
+            ),
+            TextSpan(
+              text: 'Assistant',
+              style: TextStyle(color: Color(0xffe46b10), fontSize: 30),
+            ),
+          ]),
+    );
   }
 }
