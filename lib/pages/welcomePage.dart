@@ -34,7 +34,7 @@ class _WelcomePageState extends State<WelcomePage> {
             ],
             color: Colors.white),
         child: Text(
-          'Login',
+          'Anmelden',
           style: TextStyle(fontSize: 20, color: Color(0xfff7892b)),
         ),
       ),
@@ -56,39 +56,11 @@ class _WelcomePageState extends State<WelcomePage> {
           border: Border.all(color: Colors.white, width: 2),
         ),
         child: Text(
-          'Register now',
+          'Jetzt registrieren',
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
       ),
     );
-  }
-
-  Widget _label() {
-    return Container(
-        margin: EdgeInsets.only(top: 40, bottom: 20),
-        child: Column(
-          children: <Widget>[
-            Text(
-              'Quick login with Touch ID',
-              style: TextStyle(color: Colors.white, fontSize: 17),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Icon(Icons.fingerprint, size: 90, color: Colors.white),
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              'Touch ID',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 15,
-                decoration: TextDecoration.underline,
-              ),
-            ),
-          ],
-        ));
   }
 
   Widget _title() {
@@ -97,7 +69,7 @@ class _WelcomePageState extends State<WelcomePage> {
       text: TextSpan(
           text: 'BM',
           style: GoogleFonts.portLligatSans(
-            textStyle: Theme.of(context).textTheme.display1,
+            textStyle: Theme.of(context).textTheme.headline4,
             fontSize: 30,
             fontWeight: FontWeight.w700,
             color: Color(0xffe46b10),
@@ -150,8 +122,7 @@ class _WelcomePageState extends State<WelcomePage> {
               _signUpButton(),
               SizedBox(
                 height: 20,
-              ),
-              _label()
+              )
             ],
           ),
         ),

@@ -77,7 +77,7 @@ class _SignUpPageState extends State<SignUpPage> {
               end: Alignment.centerRight,
               colors: [Color(0xfffbb448), Color(0xfff7892b)])),
       child: Text(
-        'Register Now',
+        'Jetzt registrieren',
         style: TextStyle(fontSize: 20, color: Colors.white),
       ),
     );
@@ -97,7 +97,7 @@ class _SignUpPageState extends State<SignUpPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Already have an account ?',
+              'Du hast schon einen Account?',
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
             ),
             SizedBox(
@@ -122,7 +122,7 @@ class _SignUpPageState extends State<SignUpPage> {
       text: TextSpan(
           text: 'BM',
           style: GoogleFonts.portLligatSans(
-            textStyle: Theme.of(context).textTheme.display1,
+            textStyle: Theme.of(context).textTheme.headline4,
             fontSize: 30,
             fontWeight: FontWeight.w700,
             color: Color(0xffe46b10),
@@ -143,9 +143,9 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField("Username"),
-        _entryField("Email id"),
-        _entryField("Password", isPassword: true),
+        _entryField("Benutzername"),
+        _entryField("E-Mail"),
+        _entryField("Passwort", isPassword: true),
       ],
     );
   }
