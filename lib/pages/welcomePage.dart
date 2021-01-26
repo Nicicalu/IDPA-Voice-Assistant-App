@@ -63,25 +63,27 @@ class _WelcomePageState extends State<WelcomePage> {
     );
   }
 
-  Widget _title() {
+  Widget title() {
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
-          text: 'BM',
           style: GoogleFonts.portLligatSans(
             textStyle: Theme.of(context).textTheme.headline4,
             fontSize: 30,
             fontWeight: FontWeight.w700,
-            color: Color(0xffe46b10),
           ),
           children: [
             TextSpan(
-              text: 'Voice',
+              text: 'BM ',
+              style: TextStyle(color: Color(0xffd95d00), fontSize: 30),
+            ),
+            TextSpan(
+              text: 'Voice ',
               style: TextStyle(color: Colors.black, fontSize: 30),
             ),
             TextSpan(
               text: 'Assistant',
-              style: TextStyle(color: Color(0xffe46b10), fontSize: 30),
+              style: TextStyle(color: Color(0xffd95d00), fontSize: 30),
             ),
           ]),
     );
@@ -111,7 +113,7 @@ class _WelcomePageState extends State<WelcomePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              _title(),
+              title(),
               SizedBox(
                 height: 80,
               ),

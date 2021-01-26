@@ -142,17 +142,19 @@ class SpeechScreenState extends State<SpeechScreen> {
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
-          text: 'BM',
           style: GoogleFonts.portLligatSans(
             textStyle: Theme.of(context).textTheme.headline4,
             fontSize: 30,
             fontWeight: FontWeight.w700,
-            color: Color(0xffe46b10),
           ),
           children: [
             TextSpan(
-              text: 'Voice',
-              style: TextStyle(color: Colors.black, fontSize: 30),
+              text: 'BM ',
+              style: TextStyle(color: Color(0xffe46b10), fontSize: 30),
+            ),
+            TextSpan(
+              text: 'Voice ',
+              style: TextStyle(fontSize: 30),
             ),
             TextSpan(
               text: 'Assistant',

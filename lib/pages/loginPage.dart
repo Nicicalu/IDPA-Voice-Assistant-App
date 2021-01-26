@@ -11,11 +11,11 @@ class LoginPage extends StatefulWidget {
   final String title;
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  LoginPageState createState() => LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  Widget _backButton() {
+class LoginPageState extends State<LoginPage> {
+  Widget backButton() {
     return InkWell(
       onTap: () {
         Navigator.pop(context);
@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _entryField(String title, {bool isPassword = false}) {
+  Widget entryField(String title, {bool isPassword = false}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -61,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _submitButton() {
+  Widget submitButton() {
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _createAccountLabel() {
+  Widget createAccountLabel() {
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -126,21 +126,23 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _title() {
+  Widget title() {
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
-          text: 'BM',
           style: GoogleFonts.portLligatSans(
             textStyle: Theme.of(context).textTheme.headline4,
             fontSize: 30,
             fontWeight: FontWeight.w700,
-            color: Color(0xffe46b10),
           ),
           children: [
             TextSpan(
-              text: 'Voice',
-              style: TextStyle(color: Colors.black, fontSize: 30),
+              text: 'BM ',
+              style: TextStyle(color: Color(0xffe46b10), fontSize: 30),
+            ),
+            TextSpan(
+              text: 'Voice ',
+              style: TextStyle(fontSize: 30),
             ),
             TextSpan(
               text: 'Assistant',
@@ -150,11 +152,11 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _emailPasswordWidget() {
+  Widget emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField("E-Mail"),
-        _entryField("Passwort", isPassword: true),
+        entryField("E-Mail"),
+        entryField("Passwort", isPassword: true),
       ],
     );
   }
@@ -179,11 +181,11 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(height: height * .2),
-                  _title(),
+                  title(),
                   SizedBox(height: 50),
-                  _emailPasswordWidget(),
+                  emailPasswordWidget(),
                   SizedBox(height: 20),
-                  _submitButton(),
+                  submitButton(),
                   Container(
                     padding: EdgeInsets.symmetric(vertical: 10),
                     alignment: Alignment.centerRight,
@@ -192,12 +194,12 @@ class _LoginPageState extends State<LoginPage> {
                             fontSize: 14, fontWeight: FontWeight.w500)),
                   ),
                   SizedBox(height: height * .055),
-                  _createAccountLabel(),
+                  createAccountLabel(),
                 ],
               ),
             ),
           ),
-          Positioned(top: 40, left: 0, child: _backButton()),
+          Positioned(top: 40, left: 0, child: backButton()),
         ],
       ),
     ));

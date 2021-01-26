@@ -9,11 +9,11 @@ class SignUpPage extends StatefulWidget {
   final String title;
 
   @override
-  _SignUpPageState createState() => _SignUpPageState();
+  SignUpPageState createState() => SignUpPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
-  Widget _backButton() {
+class SignUpPageState extends State<SignUpPage> {
+  Widget backButton() {
     return InkWell(
       onTap: () {
         Navigator.pop(context);
@@ -26,7 +26,7 @@ class _SignUpPageState extends State<SignUpPage> {
               padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
               child: Icon(Icons.keyboard_arrow_left),
             ),
-            Text('Back',
+            Text('Zurück',
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))
           ],
         ),
@@ -34,7 +34,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _entryField(String title, {bool isPassword = false}) {
+  Widget entryField(String title, {bool isPassword = false}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -59,7 +59,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _submitButton() {
+  Widget submitButton() {
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.symmetric(vertical: 15),
@@ -85,7 +85,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _loginAccountLabel() {
+  Widget loginAccountLabel() {
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -118,21 +118,23 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _title() {
+  Widget title() {
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
-          text: 'BM',
           style: GoogleFonts.portLligatSans(
             textStyle: Theme.of(context).textTheme.headline4,
             fontSize: 30,
             fontWeight: FontWeight.w700,
-            color: Color(0xffe46b10),
           ),
           children: [
             TextSpan(
-              text: 'Voice',
-              style: TextStyle(color: Colors.black, fontSize: 30),
+              text: 'BM ',
+              style: TextStyle(color: Color(0xffe46b10), fontSize: 30),
+            ),
+            TextSpan(
+              text: 'Voice ',
+              style: TextStyle(fontSize: 30),
             ),
             TextSpan(
               text: 'Assistant',
@@ -142,12 +144,12 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _emailPasswordWidget() {
+  Widget emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField("Benutzername"),
-        _entryField("E-Mail"),
-        _entryField("Passwort", isPassword: true),
+        entryField("Benutzername"),
+        entryField("E-Mail"),
+        entryField("Passwort", isPassword: true),
       ],
     );
   }
@@ -173,22 +175,22 @@ class _SignUpPageState extends State<SignUpPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     SizedBox(height: height * .2),
-                    _title(),
+                    title(),
                     SizedBox(
                       height: 50,
                     ),
-                    _emailPasswordWidget(),
+                    emailPasswordWidget(),
                     SizedBox(
                       height: 20,
                     ),
-                    _submitButton(),
+                    submitButton(),
                     SizedBox(height: height * .14),
-                    _loginAccountLabel(),
+                    loginAccountLabel(),
                   ],
                 ),
               ),
             ),
-            Positioned(top: 40, left: 0, child: _backButton()),
+            Positioned(top: 40, left: 0, child: backButton()),
           ],
         ),
       ),
