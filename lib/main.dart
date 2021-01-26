@@ -34,21 +34,21 @@ class MyApp extends StatelessWidget {
 
 class SpeechScreen extends StatefulWidget {
   @override
-  _SpeechScreenState createState() => _SpeechScreenState();
+  SpeechScreenState createState() => SpeechScreenState();
 }
 
-class _SpeechScreenState extends State<SpeechScreen> {
-  stt.SpeechToText _speech;
-  bool _isListening = false;
-  String _text = 'Knopf drücken und reden...';
-  double _confidence = 1.0;
+class SpeechScreenState extends State<SpeechScreen> {
+  stt.SpeechToText speech;
+  bool isListening = false;
+  String text = 'Knopf drücken und reden...';
+  double confidence = 1.0;
 
   FlutterTts flutterTts = FlutterTts();
 
   @override
   void initState() {
     super.initState();
-    _speech = stt.SpeechToText();
+    speech = stt.SpeechToText();
   }
 
   @override
@@ -57,12 +57,12 @@ class _SpeechScreenState extends State<SpeechScreen> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).backgroundColor,
         title: SizedBox(
-          child: _title(),
+          child: title(),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: AvatarGlow(
-        animate: _isListening,
+        animate: isListening,
         glowColor: Theme.of(context).primaryColor,
         endRadius: 75.0,
         duration: const Duration(milliseconds: 2000),
@@ -70,11 +70,11 @@ class _SpeechScreenState extends State<SpeechScreen> {
         repeat: true,
         child: Container(
           child: FloatingActionButton(
-            onPressed: _listen,
+            onPressed: listen,
             child: Container(
               width: 60,
               height: 60,
-              child: Icon(_isListening ? Icons.mic : Icons.mic_none,
+              child: Icon(isListening ? Icons.mic : Icons.mic_none,
                   color: Colors.white),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
@@ -92,7 +92,7 @@ class _SpeechScreenState extends State<SpeechScreen> {
         child: Container(
           padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 150.0),
           child: Text(
-            _text,
+            text,
             style: const TextStyle(
               fontSize: 32.0,
               fontWeight: FontWeight.w400,
@@ -103,42 +103,42 @@ class _SpeechScreenState extends State<SpeechScreen> {
     );
   }
 
-  void _listen() async {
-    if (!_isListening) {
-      bool available = await _speech.initialize(
+  void listen() async {
+    if (!isListening) {
+      bool available = await speech.initialize(
         onStatus: (val) {
           print('onStatus: $val');
           if (val == "notListening") {
-            print("Finaler Text: $_text");
-            var result = flutterTts.speak(_text);
-            getAnswer(_text);
+            print("Finaler Text: $text");
+            var result = flutterTts.speak(text);
+            getAnswer(text);
             setState(() {
-              print("SetState mit _isListening = false");
-              _isListening = false;
+              print("SetState mit isListening = false");
+              isListening = false;
             });
           }
         },
         onError: (val) => print('onError: $val'),
       );
       if (available) {
-        setState(() => _isListening = true);
-        _speech.listen(
+        setState(() => isListening = true);
+        speech.listen(
           onResult: (val) => setState(() {
-            _text = val.recognizedWords;
-            _text = _text.capitalize();
+            text = val.recognizedWords;
+            text = text.capitalize();
             if (val.hasConfidenceRating && val.confidence > 0) {
-              _confidence = val.confidence;
+              confidence = val.confidence;
             }
           }),
         );
       }
     } else {
-      setState(() => _isListening = false);
-      _speech.stop();
+      setState(() => isListening = false);
+      speech.stop();
     }
   }
 
-  Widget _title() {
+  Widget title() {
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
