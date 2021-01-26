@@ -18,13 +18,13 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Voice',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          primarySwatch: Colors.orange,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          backgroundColor: const Color(0xFFE5E5E5)),
+        primarySwatch: Colors.orange,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        backgroundColor: const Color(0xFFE5E5E5),
+      ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         backgroundColor: const Color(0xFF212121),
-        /* dark theme settings */
       ),
       themeMode: ThemeMode.system,
       home: WelcomePage(),
@@ -40,7 +40,7 @@ class SpeechScreen extends StatefulWidget {
 class _SpeechScreenState extends State<SpeechScreen> {
   stt.SpeechToText _speech;
   bool _isListening = false;
-  String _text = 'Knopf drücken und reden😁';
+  String _text = 'Knopf drücken und reden...';
   double _confidence = 1.0;
 
   FlutterTts flutterTts = FlutterTts();
