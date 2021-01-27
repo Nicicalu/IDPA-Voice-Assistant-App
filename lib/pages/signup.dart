@@ -119,28 +119,31 @@ class SignUpPageState extends State<SignUpPage> {
   }
 
   Widget title() {
-    return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-          style: GoogleFonts.portLligatSans(
-            textStyle: Theme.of(context).textTheme.headline4,
-            fontSize: 30,
-            fontWeight: FontWeight.w700,
-          ),
-          children: [
-            TextSpan(
-              text: 'BM ',
-              style: TextStyle(color: Color(0xffe46b10), fontSize: 30),
+    return Hero(
+      tag: "title",
+      child: RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+            style: GoogleFonts.portLligatSans(
+              textStyle: Theme.of(context).textTheme.headline4,
+              fontSize: 30,
+              fontWeight: FontWeight.w700,
             ),
-            TextSpan(
-              text: 'Voice ',
-              style: TextStyle(fontSize: 30),
-            ),
-            TextSpan(
-              text: 'Assistant',
-              style: TextStyle(color: Color(0xffe46b10), fontSize: 30),
-            ),
-          ]),
+            children: [
+              TextSpan(
+                text: 'BM ',
+                style: TextStyle(color: Color(0xffd95d00), fontSize: 30),
+              ),
+              TextSpan(
+                text: 'Voice ',
+                style: TextStyle(fontSize: 30),
+              ),
+              TextSpan(
+                text: 'Assistant',
+                style: TextStyle(color: Color(0xffd95d00), fontSize: 30),
+              ),
+            ]),
+      ),
     );
   }
 

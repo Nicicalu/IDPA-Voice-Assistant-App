@@ -6,6 +6,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:voice_assistant/models/main_model.dart';
 import 'package:voice_assistant/helper/string_extension.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:voice_assistant/pages/settings.dart';
 
 void main() {
   runApp(MyApp());
@@ -59,6 +60,22 @@ class SpeechScreenState extends State<SpeechScreen> {
         title: SizedBox(
           child: title(),
         ),
+        actions: <Widget>[
+          Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SettingsPage()),
+                  );
+                },
+                child: Icon(
+                  Icons.settings,
+                  size: 26.0,
+                ),
+              )),
+        ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: AvatarGlow(
@@ -139,28 +156,31 @@ class SpeechScreenState extends State<SpeechScreen> {
   }
 
   Widget title() {
-    return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-          style: GoogleFonts.portLligatSans(
-            textStyle: Theme.of(context).textTheme.headline4,
-            fontSize: 30,
-            fontWeight: FontWeight.w700,
-          ),
-          children: [
-            TextSpan(
-              text: 'BM ',
-              style: TextStyle(color: Color(0xffe46b10), fontSize: 30),
+    return Hero(
+      tag: "title",
+      child: RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+            style: GoogleFonts.portLligatSans(
+              textStyle: Theme.of(context).textTheme.headline4,
+              fontSize: 30,
+              fontWeight: FontWeight.w700,
             ),
-            TextSpan(
-              text: 'Voice ',
-              style: TextStyle(fontSize: 30),
-            ),
-            TextSpan(
-              text: 'Assistant',
-              style: TextStyle(color: Color(0xffe46b10), fontSize: 30),
-            ),
-          ]),
+            children: [
+              TextSpan(
+                text: 'BM ',
+                style: TextStyle(color: Color(0xffd95d00), fontSize: 30),
+              ),
+              TextSpan(
+                text: 'Voice ',
+                style: TextStyle(fontSize: 30),
+              ),
+              TextSpan(
+                text: 'Assistant',
+                style: TextStyle(color: Color(0xffd95d00), fontSize: 30),
+              ),
+            ]),
+      ),
     );
   }
 }
