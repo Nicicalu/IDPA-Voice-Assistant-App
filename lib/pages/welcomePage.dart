@@ -46,17 +46,20 @@ class _WelcomePageState extends State<WelcomePage> {
       onTap: () {
         Navigator.pushNamed(context, '/login');
       },
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(vertical: 13),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
-          border: Border.all(color: Colors.white, width: 2),
-        ),
-        child: Text(
-          'Jetzt registrieren',
-          style: TextStyle(fontSize: 20, color: Colors.white),
+      child: Hero(
+        tag: "button2",
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.symmetric(vertical: 13),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            border: Border.all(color: Colors.white, width: 2),
+          ),
+          child: Text(
+            'Jetzt registrieren',
+            style: TextStyle(fontSize: 20, color: Colors.white),
+          ),
         ),
       ),
     );
