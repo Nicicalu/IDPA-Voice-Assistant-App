@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:voice_assistant/pages/loginPage.dart';
+import 'package:voice_assistant/pages/signup.dart';
 import 'package:voice_assistant/pages/welcomePage.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:voice_assistant/models/main_model.dart';
@@ -28,7 +30,14 @@ class MyApp extends StatelessWidget {
         backgroundColor: const Color(0xFF212121),
       ),
       themeMode: ThemeMode.system,
-      home: WelcomePage(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => SpeechScreen(),
+        '/welcome': (context) => WelcomePage(),
+        '/login': (context) => LoginPage(),
+        '/signup': (context) => SignUpPage(),
+        '/settings': (context) => SettingsPage()
+      },
     );
   }
 }
@@ -57,6 +66,7 @@ class SpeechScreenState extends State<SpeechScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).backgroundColor,
+        automaticallyImplyLeading: false,
         title: SizedBox(
           child: title(),
         ),
@@ -65,10 +75,7 @@ class SpeechScreenState extends State<SpeechScreen> {
               padding: EdgeInsets.only(right: 20.0),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SettingsPage()),
-                  );
+                  Navigator.pushNamed(context, '/settings');
                 },
                 child: Icon(
                   Icons.settings,
@@ -87,6 +94,7 @@ class SpeechScreenState extends State<SpeechScreen> {
         repeat: true,
         child: Container(
           child: FloatingActionButton(
+            heroTag: "roundButton",
             onPressed: listen,
             child: Container(
               width: 60,

@@ -64,8 +64,7 @@ class LoginPageState extends State<LoginPage> {
   Widget submitButton() {
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SpeechScreen()));
+        Navigator.pushNamed(context, '/');
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -96,8 +95,7 @@ class LoginPageState extends State<LoginPage> {
   Widget createAccountLabel() {
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SignUpPage()));
+        Navigator.pushNamed(context, '/signup');
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 20),

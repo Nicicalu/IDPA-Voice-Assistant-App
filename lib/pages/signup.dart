@@ -88,8 +88,7 @@ class SignUpPageState extends State<SignUpPage> {
   Widget loginAccountLabel() {
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LoginPage()));
+        Navigator.pushNamed(context, '/login');
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 20),
