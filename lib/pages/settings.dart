@@ -50,6 +50,7 @@ class SettingsPageState extends State<SettingsPage> {
                         ),
                       ),
                       leading: CircleAvatar(
+                        //TODO: Bild lokal speichern (Copright beachten.)
                         backgroundImage: NetworkImage(
                             "https://www.vzpm.ch/fileadmin/bilder/personen/dummy_person.png"),
                       ),

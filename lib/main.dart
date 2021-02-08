@@ -1,6 +1,11 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:avatar_glow/avatar_glow.dart';
-import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:speech_to_text/speech_recognition_error.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'package:voice_assistant/pages/loginPage.dart';
 import 'package:voice_assistant/pages/signup.dart';
 import 'package:voice_assistant/pages/welcomePage.dart';
@@ -48,17 +53,43 @@ class SpeechScreen extends StatefulWidget {
 }
 
 class SpeechScreenState extends State<SpeechScreen> {
-  stt.SpeechToText speech;
-  bool isListening = false;
-  String text = 'Knopf drücken und reden...';
-  double confidence = 1.0;
-
-  FlutterTts flutterTts = FlutterTts();
+  bool _hasSpeech = false;
+  double level = 0.0;
+  double minSoundLevel = 50000;
+  double maxSoundLevel = -50000;
+  String lastWords = '';
+  String lastError = '';
+  String lastStatus = '';
+  String _currentLocaleId = '';
+  int resultListened = 0;
+  List<LocaleName> _localeNames = [];
+  final SpeechToText speech = SpeechToText();
 
   @override
   void initState() {
     super.initState();
-    speech = stt.SpeechToText();
+    initSpeechState();
+  }
+
+  Future<void> initSpeechState() async {
+    var hasSpeech = await speech.initialize(
+        onError: errorListener, onStatus: statusListener, debugLogging: true);
+    if (hasSpeech) {
+      _localeNames = await speech.locales();
+
+      var systemLocale = await speech.systemLocale();
+      if (null != systemLocale) {
+        _currentLocaleId = systemLocale.localeId;
+      } else {
+        _currentLocaleId = 'en_US';
+      }
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      _hasSpeech = hasSpeech;
+    });
   }
 
   @override
@@ -86,7 +117,7 @@ class SpeechScreenState extends State<SpeechScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: AvatarGlow(
-        animate: isListening,
+        animate: speech.isListening,
         glowColor: Theme.of(context).primaryColor,
         endRadius: 75.0,
         duration: const Duration(milliseconds: 2000),
@@ -95,11 +126,13 @@ class SpeechScreenState extends State<SpeechScreen> {
         child: Container(
           child: FloatingActionButton(
             heroTag: "button1",
-            onPressed: listen,
+            onPressed: !_hasSpeech || speech.isListening
+                ? stopListening
+                : startListening,
             child: Container(
               width: 60,
               height: 60,
-              child: Icon(isListening ? Icons.mic : Icons.mic_none,
+              child: Icon(speech.isListening ? Icons.mic : Icons.mic_none,
                   color: Colors.white),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
@@ -116,51 +149,32 @@ class SpeechScreenState extends State<SpeechScreen> {
         reverse: true,
         child: Container(
           padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 150.0),
-          child: Text(
-            text,
-            style: const TextStyle(
-              fontSize: 32.0,
-              fontWeight: FontWeight.w400,
-            ),
+          child: Column(
+            children: [
+              Text(
+                lastWords,
+                style: const TextStyle(
+                  fontSize: 32.0,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              DropdownButton(
+                onChanged: (selectedVal) => _switchLang(selectedVal),
+                value: _currentLocaleId,
+                items: _localeNames
+                    .map(
+                      (localeName) => DropdownMenuItem(
+                        value: localeName.localeId,
+                        child: Text(localeName.name),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ],
           ),
         ),
       ),
     );
-  }
-
-  void listen() async {
-    if (!isListening) {
-      bool available = await speech.initialize(
-        onStatus: (val) {
-          print('onStatus: $val');
-          if (val == "notListening") {
-            print("Finaler Text: $text");
-            var result = flutterTts.speak(text);
-            getAnswer(text);
-            setState(() {
-              print("SetState mit isListening = false");
-              isListening = false;
-            });
-          }
-        },
-        onError: (val) => print('onError: $val'),
-      );
-      if (available) {
-        setState(() => isListening = true);
-        speech.listen(
-          onResult: (val) => setState(() {
-            text = val.recognizedWords;
-            text = text.capitalize();
-            if (val.hasConfidenceRating && val.confidence > 0) {
-              confidence = val.confidence;
-            }
-          }),
-        );
-      }
-    } else {
-      setState(() => isListening = false);
-      speech.stop();
-    }
   }
 
   Widget title() {
@@ -190,5 +204,73 @@ class SpeechScreenState extends State<SpeechScreen> {
             ]),
       ),
     );
+  }
+
+  void startListening() {
+    lastWords = '';
+    lastError = '';
+    speech.listen(
+        onResult: resultListener,
+        listenFor: Duration(seconds: 5),
+        pauseFor: Duration(seconds: 5),
+        partialResults: true,
+        localeId: _currentLocaleId,
+        onSoundLevelChange: soundLevelListener,
+        cancelOnError: true,
+        listenMode: ListenMode.confirmation);
+    setState(() {});
+  }
+
+  void stopListening() {
+    speech.stop();
+    setState(() {
+      level = 0.0;
+    });
+  }
+
+  void cancelListening() {
+    speech.cancel();
+    setState(() {
+      level = 0.0;
+    });
+  }
+
+  void resultListener(SpeechRecognitionResult result) {
+    ++resultListened;
+    print('Result listener $resultListened');
+    setState(() {
+      lastWords = '${result.recognizedWords}'.capitalize();
+    });
+  }
+
+  void soundLevelListener(double level) {
+    minSoundLevel = min(minSoundLevel, level);
+    maxSoundLevel = max(maxSoundLevel, level);
+    print("sound level $level: $minSoundLevel - $maxSoundLevel ");
+    setState(() {
+      this.level = level;
+    });
+  }
+
+  void errorListener(SpeechRecognitionError error) {
+    print("Received error status: $error, listening: ${speech.isListening}");
+    setState(() {
+      lastError = '${error.errorMsg} - ${error.permanent}';
+    });
+  }
+
+  void statusListener(String status) {
+    print(
+        'Received listener status: $status, listening: ${speech.isListening}');
+    setState(() {
+      lastStatus = '$status';
+    });
+  }
+
+  void _switchLang(selectedVal) {
+    setState(() {
+      _currentLocaleId = selectedVal;
+    });
+    print(selectedVal);
   }
 }
