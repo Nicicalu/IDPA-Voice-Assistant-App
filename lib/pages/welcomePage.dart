@@ -44,7 +44,7 @@ class _WelcomePageState extends State<WelcomePage> {
   Widget _signUpButton() {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, '/login');
+        Navigator.pushNamed(context, '/signup');
       },
       child: Hero(
         tag: "button2",

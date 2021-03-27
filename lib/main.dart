@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:avatar_glow/avatar_glow.dart';
@@ -62,8 +63,12 @@ class SpeechScreenState extends State<SpeechScreen> {
   String lastStatus = '';
   String _currentLocaleId = '';
   int resultListened = 0;
+  String answer;
   List<LocaleName> _localeNames = [];
   final SpeechToText speech = SpeechToText();
+
+  //Text to speech
+  FlutterTts flutterTts = FlutterTts();
 
   @override
   void initState() {
@@ -83,6 +88,7 @@ class SpeechScreenState extends State<SpeechScreen> {
       } else {
         _currentLocaleId = 'en_US';
       }
+      //_currentLocaleId = 'de';
     }
 
     if (!mounted) return;
@@ -95,6 +101,7 @@ class SpeechScreenState extends State<SpeechScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // TODO: SliverAppBar für Scroll und so
       appBar: AppBar(
         backgroundColor: Theme.of(context).backgroundColor,
         automaticallyImplyLeading: false,
@@ -158,7 +165,7 @@ class SpeechScreenState extends State<SpeechScreen> {
                   fontWeight: FontWeight.w400,
                 ),
               ),
-              DropdownButton(
+              /*DropdownButton(
                 onChanged: (selectedVal) => _switchLang(selectedVal),
                 value: _currentLocaleId,
                 items: _localeNames
@@ -169,7 +176,7 @@ class SpeechScreenState extends State<SpeechScreen> {
                       ),
                     )
                     .toList(),
-              ),
+              ),*/
             ],
           ),
         ),
@@ -209,6 +216,7 @@ class SpeechScreenState extends State<SpeechScreen> {
   void startListening() {
     lastWords = '';
     lastError = '';
+    flutterTts.stop();
     speech.listen(
         onResult: resultListener,
         listenFor: Duration(seconds: 5),
@@ -241,12 +249,23 @@ class SpeechScreenState extends State<SpeechScreen> {
     setState(() {
       lastWords = '${result.recognizedWords}'.capitalize();
     });
+    if (result.finalResult) {
+      getAnswer(result.recognizedWords.capitalize())
+          .then((answer) {
+            setState(() {
+              lastWords = answer.capitalize();
+              var ttsResult = flutterTts.speak(lastWords);
+            });
+          })
+          .catchError((e) => print(e))
+          .whenComplete(() {});
+    }
   }
 
   void soundLevelListener(double level) {
     minSoundLevel = min(minSoundLevel, level);
     maxSoundLevel = max(maxSoundLevel, level);
-    print("sound level $level: $minSoundLevel - $maxSoundLevel ");
+    //print("sound level $level: $minSoundLevel - $maxSoundLevel ");
     setState(() {
       this.level = level;
     });
