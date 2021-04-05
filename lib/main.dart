@@ -15,6 +15,7 @@ import 'package:voice_assistant/models/main_model.dart';
 import 'package:voice_assistant/helper/string_extension.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:voice_assistant/pages/settings.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 void main() {
   runApp(MyApp());
@@ -48,6 +49,12 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class ChatMessage {
+  String messageContent;
+  String messageType;
+  ChatMessage({@required this.messageContent, @required this.messageType});
+}
+
 class SpeechScreen extends StatefulWidget {
   @override
   SpeechScreenState createState() => SpeechScreenState();
@@ -64,6 +71,7 @@ class SpeechScreenState extends State<SpeechScreen> {
   String _currentLocaleId = '';
   int resultListened = 0;
   String answer;
+  bool loading = false;
   List<LocaleName> _localeNames = [];
   final SpeechToText speech = SpeechToText();
 
@@ -97,6 +105,12 @@ class SpeechScreenState extends State<SpeechScreen> {
       _hasSpeech = hasSpeech;
     });
   }
+
+  List<ChatMessage> messages = [
+    ChatMessage(
+        messageContent: "Hallo, wie kann ich dir helfen?",
+        messageType: "receiver"),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -158,6 +172,49 @@ class SpeechScreenState extends State<SpeechScreen> {
           padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 150.0),
           child: Column(
             children: [
+              ListView.builder(
+                itemCount: messages.length,
+                shrinkWrap: true,
+                padding: EdgeInsets.only(top: 10, bottom: 10),
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return Container(
+                    padding:
+                        EdgeInsets.only(left: 0, right: 0, top: 10, bottom: 10),
+                    child: Align(
+                      alignment: (messages[index].messageType == "receiver"
+                          ? Alignment.topLeft
+                          : Alignment.topRight),
+                      child: Container(
+                        constraints:
+                            BoxConstraints(minWidth: 10, maxWidth: 250),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              messages[index].messageType == "receiver"
+                                  ? BorderRadius.only(
+                                      topRight: Radius.circular(10.0),
+                                      bottomLeft: Radius.circular(15.0),
+                                      bottomRight: Radius.circular(10.0),
+                                    )
+                                  : BorderRadius.only(
+                                      topLeft: Radius.circular(10.0),
+                                      bottomLeft: Radius.circular(10.0),
+                                      bottomRight: Radius.circular(15.0),
+                                    ),
+                          color: (messages[index].messageType == "receiver"
+                              ? Colors.orange
+                              : Colors.blue[200]),
+                        ),
+                        padding: EdgeInsets.all(16),
+                        child: Text(
+                          messages[index].messageContent,
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
               Text(
                 lastWords,
                 style: const TextStyle(
@@ -165,6 +222,21 @@ class SpeechScreenState extends State<SpeechScreen> {
                   fontWeight: FontWeight.w400,
                 ),
               ),
+              Align(
+                  alignment: FractionalOffset.bottomCenter,
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 10.0),
+                    child: Visibility(
+                      child: SpinKitWave(
+                        color: Colors.orange,
+                        size: 50.0,
+                      ),
+                      maintainSize: true,
+                      maintainAnimation: true,
+                      maintainState: true,
+                      visible: (loading ? true : false),
+                    ),
+                  )),
               /*DropdownButton(
                 onChanged: (selectedVal) => _switchLang(selectedVal),
                 value: _currentLocaleId,
@@ -250,11 +322,25 @@ class SpeechScreenState extends State<SpeechScreen> {
       lastWords = '${result.recognizedWords}'.capitalize();
     });
     if (result.finalResult) {
+      setState(() {
+        messages.add(
+          ChatMessage(
+              messageContent: result.recognizedWords.capitalize(),
+              messageType: "sender"),
+        );
+        loading = true;
+        lastWords = "";
+      });
       getAnswer(result.recognizedWords.capitalize())
           .then((answer) {
             setState(() {
-              lastWords = answer.capitalize();
-              var ttsResult = flutterTts.speak(lastWords);
+              var ttsResult = flutterTts.speak(answer.capitalize());
+              messages.add(
+                ChatMessage(
+                    messageContent: answer.capitalize(),
+                    messageType: "receiver"),
+              );
+              loading = false;
             });
           })
           .catchError((e) => print(e))
