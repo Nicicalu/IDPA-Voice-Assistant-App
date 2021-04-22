@@ -16,6 +16,7 @@ import 'package:voice_assistant/helper/string_extension.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:voice_assistant/pages/settings.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:voice_assistant/helper/globals.dart' as globals;
 
 void main() {
   runApp(MyApp());

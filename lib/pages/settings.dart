@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:voice_assistant/helper/globals.dart' as globals;
 
 class SettingsPage extends StatefulWidget {
   SettingsPage({Key key}) : super(key: key);
@@ -76,20 +77,19 @@ class SettingsPageState extends State<SettingsPage> {
                         ),
                         title: Text("Passwort ändern"),
                         trailing: Icon(Icons.keyboard_arrow_right),
-                        onTap: () {
-                          //open change password
-                        },
+                        onTap: () {},
                       ),
                       _buildDivider(),
                       ListTile(
                         leading: Icon(
-                          Icons.language,
+                          Icons.person,
                           color: Colors.orange,
                         ),
-                        title: Text("Sprache ändern"),
+                        title: Text("Schüler-Nummer ändern"),
                         trailing: Icon(Icons.keyboard_arrow_right),
                         onTap: () {
-                          //open change language
+                          _displayTextInputDialog(context, "schuelernr",
+                              "Schüler-Nummer ändern", "Schüler-Nummer");
                         },
                       ),
                     ],
@@ -218,5 +218,60 @@ class SettingsPageState extends State<SettingsPage> {
             ]),
       ),
     );
+  }
+
+  String valueText;
+
+  TextEditingController _textFieldController =
+      TextEditingController(text: "Fehler...");
+  Future<void> _displayTextInputDialog(
+    BuildContext context,
+    String setting,
+    String title,
+    String placeholder,
+  ) async {
+    valueText = globals.getSetting(setting);
+    _textFieldController = TextEditingController(text: valueText);
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(title),
+            content: TextField(
+              onChanged: (value) {
+                setState(() {
+                  valueText = value;
+                });
+              },
+              controller: _textFieldController,
+              decoration: InputDecoration(hintText: placeholder),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                color: Colors.red,
+                textColor: Colors.white,
+                child: Text('Abbrechen'),
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+              FlatButton(
+                color: Colors.green,
+                textColor: Colors.white,
+                child: Text('Speichern'),
+                onPressed: () {
+                  setState(() {
+                    globals.setSetting(setting, valueText);
+                    print(setting);
+                    print(globals.settings[setting]);
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+            ],
+          );
+        });
   }
 }
