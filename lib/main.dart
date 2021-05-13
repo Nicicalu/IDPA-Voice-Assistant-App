@@ -75,6 +75,7 @@ class SpeechScreenState extends State<SpeechScreen> {
   bool loading = false;
   List<LocaleName> _localeNames = [];
   final SpeechToText speech = SpeechToText();
+  var tmp = globals.getSettingsInStorage();
 
   //Text to speech
   FlutterTts flutterTts = FlutterTts();
@@ -86,6 +87,10 @@ class SpeechScreenState extends State<SpeechScreen> {
   }
 
   Future<void> initSpeechState() async {
+    await flutterTts.setVoice({"name": "de-de-x-nfh-local", "locale": "de-DE"});
+    await flutterTts.setSpeechRate(1);
+    await flutterTts.setPitch(1);
+
     var hasSpeech = await speech.initialize(
         onError: errorListener, onStatus: statusListener, debugLogging: true);
     if (hasSpeech) {
@@ -93,11 +98,11 @@ class SpeechScreenState extends State<SpeechScreen> {
 
       var systemLocale = await speech.systemLocale();
       if (null != systemLocale) {
-        _currentLocaleId = systemLocale.localeId;
+        //_currentLocaleId = systemLocale.localeId;
       } else {
-        _currentLocaleId = 'en_US';
+        //_currentLocaleId = 'en_US';
       }
-      //_currentLocaleId = 'de';
+      _currentLocaleId = 'de';
     }
 
     if (!mounted) return;
@@ -112,6 +117,29 @@ class SpeechScreenState extends State<SpeechScreen> {
         messageContent: "Hallo, wie kann ich dir helfen?",
         messageType: "receiver"),
   ];
+
+  void newQuestion(question) {
+    setState(() {
+      messages.add(
+        ChatMessage(messageContent: question, messageType: "sender"),
+      );
+      loading = true;
+      lastWords = "";
+    });
+    getAnswer(question)
+        .then((answer) {
+          setState(() {
+            var ttsResult = flutterTts.speak(answer.capitalize());
+            messages.add(
+              ChatMessage(
+                  messageContent: answer.capitalize(), messageType: "receiver"),
+            );
+            loading = false;
+          });
+        })
+        .catchError((e) => print(e))
+        .whenComplete(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -179,37 +207,44 @@ class SpeechScreenState extends State<SpeechScreen> {
                 padding: EdgeInsets.only(top: 10, bottom: 10),
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  return Container(
-                    padding:
-                        EdgeInsets.only(left: 0, right: 0, top: 10, bottom: 10),
-                    child: Align(
-                      alignment: (messages[index].messageType == "receiver"
-                          ? Alignment.topLeft
-                          : Alignment.topRight),
-                      child: Container(
-                        constraints:
-                            BoxConstraints(minWidth: 10, maxWidth: 250),
-                        decoration: BoxDecoration(
-                          borderRadius:
-                              messages[index].messageType == "receiver"
-                                  ? BorderRadius.only(
-                                      topRight: Radius.circular(10.0),
-                                      bottomLeft: Radius.circular(15.0),
-                                      bottomRight: Radius.circular(10.0),
-                                    )
-                                  : BorderRadius.only(
-                                      topLeft: Radius.circular(10.0),
-                                      bottomLeft: Radius.circular(10.0),
-                                      bottomRight: Radius.circular(15.0),
-                                    ),
-                          color: (messages[index].messageType == "receiver"
-                              ? Colors.orange
-                              : Colors.blue[200]),
-                        ),
-                        padding: EdgeInsets.all(16),
-                        child: Text(
-                          messages[index].messageContent,
-                          style: TextStyle(fontSize: 15),
+                  return InkWell(
+                    onTap: () {
+                      if (messages[index].messageType == "sender") {
+                        newQuestion(messages[index].messageContent);
+                      }
+                    },
+                    child: Container(
+                      padding: EdgeInsets.only(
+                          left: 0, right: 0, top: 10, bottom: 10),
+                      child: Align(
+                        alignment: (messages[index].messageType == "receiver"
+                            ? Alignment.topLeft
+                            : Alignment.topRight),
+                        child: Container(
+                          constraints:
+                              BoxConstraints(minWidth: 10, maxWidth: 250),
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                messages[index].messageType == "receiver"
+                                    ? BorderRadius.only(
+                                        topRight: Radius.circular(10.0),
+                                        bottomLeft: Radius.circular(15.0),
+                                        bottomRight: Radius.circular(10.0),
+                                      )
+                                    : BorderRadius.only(
+                                        topLeft: Radius.circular(10.0),
+                                        bottomLeft: Radius.circular(10.0),
+                                        bottomRight: Radius.circular(15.0),
+                                      ),
+                            color: (messages[index].messageType == "receiver"
+                                ? Colors.orange
+                                : Colors.blue[200]),
+                          ),
+                          padding: EdgeInsets.all(16),
+                          child: Text(
+                            messages[index].messageContent,
+                            style: TextStyle(fontSize: 15),
+                          ),
                         ),
                       ),
                     ),
@@ -290,6 +325,8 @@ class SpeechScreenState extends State<SpeechScreen> {
     lastWords = '';
     lastError = '';
     flutterTts.stop();
+    loading = false;
+
     speech.listen(
         onResult: resultListener,
         listenFor: Duration(seconds: 5),
@@ -323,29 +360,7 @@ class SpeechScreenState extends State<SpeechScreen> {
       lastWords = '${result.recognizedWords}'.capitalize();
     });
     if (result.finalResult) {
-      setState(() {
-        messages.add(
-          ChatMessage(
-              messageContent: result.recognizedWords.capitalize(),
-              messageType: "sender"),
-        );
-        loading = true;
-        lastWords = "";
-      });
-      getAnswer(result.recognizedWords.capitalize())
-          .then((answer) {
-            setState(() {
-              var ttsResult = flutterTts.speak(answer.capitalize());
-              messages.add(
-                ChatMessage(
-                    messageContent: answer.capitalize(),
-                    messageType: "receiver"),
-              );
-              loading = false;
-            });
-          })
-          .catchError((e) => print(e))
-          .whenComplete(() {});
+      newQuestion(result.recognizedWords.capitalize());
     }
   }
 
@@ -371,12 +386,5 @@ class SpeechScreenState extends State<SpeechScreen> {
     setState(() {
       lastStatus = '$status';
     });
-  }
-
-  void _switchLang(selectedVal) {
-    setState(() {
-      _currentLocaleId = selectedVal;
-    });
-    print(selectedVal);
   }
 }

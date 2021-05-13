@@ -41,10 +41,12 @@ class SettingsPageState extends State<SettingsPage> {
                     ),
                     child: ListTile(
                       onTap: () {
-                        //open edit profile
+                        print("tab");
+                        _displayTextInputDialog(
+                            context, "name", "Name ändern", "Name");
                       },
                       title: Text(
-                        "Hans Wurst",
+                        globals.getSetting("name"),
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w500,
@@ -107,32 +109,41 @@ class SettingsPageState extends State<SettingsPage> {
                 SwitchListTile(
                   activeColor: Colors.orange,
                   contentPadding: const EdgeInsets.all(0),
-                  value: true,
-                  title: Text("Einstellung 1"),
-                  onChanged: (val) {},
-                ),
-                SwitchListTile(
-                  activeColor: Colors.orange,
-                  contentPadding: const EdgeInsets.all(0),
-                  value: false,
-                  title: Text("Einstellung 2"),
-                  onChanged: (val) {},
-                ),
-                SwitchListTile(
-                  activeColor: Colors.orange,
-                  contentPadding: const EdgeInsets.all(0),
-                  value: true,
-                  title: Text("Einstellung 3"),
-                  onChanged: (val) {},
-                ),
-                SwitchListTile(
-                  activeColor: Colors.orange,
-                  contentPadding: const EdgeInsets.all(0),
-                  value: true,
-                  title: Text("Einstellung 4"),
-                  onChanged: (val) {},
+                  value: globals.getSetting("showDebug") == "true",
+                  title: Text("Debug Info zeigen"),
+                  onChanged: (val) {
+                    setState(() {
+                      globals.setSetting("showDebug", val ? "true" : "false");
+                    });
+                  },
                 ),
                 const SizedBox(height: 60.0),
+                Visibility(
+                  child: Column(
+                    children: [
+                      Text(
+                        "Debug Info",
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange,
+                        ),
+                      ),
+                      SingleChildScrollView(
+                        reverse: true,
+                        child: Container(
+                          child: Text(
+                            globals.debugText,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  maintainSize: true,
+                  maintainAnimation: true,
+                  maintainState: true,
+                  visible: (globals.getSetting("showDebug") == "true"),
+                ),
               ],
             ),
           ),
@@ -171,7 +182,9 @@ class SettingsPageState extends State<SettingsPage> {
                 color: Colors.white,
               ),
               onPressed: () {
-                Navigator.pushNamed(context, '/welcome');
+                showAlertDialog(context, "Abmelden nicht möglich",
+                    "Du kannst nich nicht abmelden, da kein Login System eingebaut wurde.");
+                //Navigator.pushNamed(context, '/welcome');
               },
             ),
           )
@@ -274,4 +287,31 @@ class SettingsPageState extends State<SettingsPage> {
           );
         });
   }
+}
+
+showAlertDialog(BuildContext context, String title, String text) {
+  // set up the button
+  Widget okButton = FlatButton(
+    child: Text("OK"),
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text(title),
+    content: Text(text),
+    actions: [
+      okButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }

@@ -7,34 +7,47 @@ import 'dart:async';
 import 'dart:convert';
 
 Future<String> getAnswer(String text) async {
-  Position position = await determinePosition();
+  globals.debugText = globals.debugText + " Determine Position|";
+  Position position = await determinePosition().timeout(Duration(seconds: 10));
+  globals.debugText = globals.debugText + " Building URL|";
   // set up POST request arguments
   String url = 'https://idpa-303108.ew.r.appspot.com/API/answer';
   //String url = 'http://127.0.0.1:5000/API/answer';
   Map<String, String> headers = {"Content-type": "application/json"};
   String json =
-      '{"auth": "asto1j950h215", "question": "$text", "properties": {  "location": {    "longitude": ' +
+      '{"question": "$text", "properties": {  "location": {    "longitude": ' +
           position.longitude.toString() +
           ',     "latitude": ' +
           position.latitude.toString() +
-          '}, "schuelernr": ' +
-          globals.settings["schuelernr"] +
-          '}}';
+          '}, "schuelernr": "' +
+          globals.getSetting("schuelernr") +
+          '","name": "' +
+          globals.getSetting("name") +
+          '"}}';
 
+  print(json);
+  globals.debugText = globals.debugText + " Sending Request: '" + json + "' |";
   // make POST request
-  var response = await http.post(url, headers: headers, body: json);
+  var response = await http
+      .post(url, headers: headers, body: json)
+      .timeout(Duration(seconds: 10));
   // check the status code for the result
   int statusCode = response.statusCode;
 
+  globals.debugText =
+      globals.debugText + " Statuscode: " + statusCode.toString() + "|";
+
+  print("--------------");
+  print("Status-Code: $statusCode");
+
   if (statusCode != 200) {
-    return "Es konnte keine Verbindung zum Server hergestellt werden. Bitte stelle sicher, dass eine Internetverbindung besteht.";
+    print("--------------");
+    return "Keine Verbindung zum Server. Statuscode: " + statusCode.toString();
   }
 
   // this API passes back the id of the new item added to the body
   final body = jsonDecode(response.body);
 
-  print("--------------");
-  print("Status-Code: $statusCode");
   print("Body: " + body['answer']);
   print("--------------");
 
