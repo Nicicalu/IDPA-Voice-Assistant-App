@@ -17,6 +17,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:voice_assistant/pages/settings.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:voice_assistant/helper/globals.dart' as globals;
+import 'package:catex/catex.dart';
+import 'package:math_keyboard/math_keyboard.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 void main() {
   runApp(MyApp());
@@ -53,7 +56,12 @@ class MyApp extends StatelessWidget {
 class ChatMessage {
   String messageContent;
   String messageType;
-  ChatMessage({@required this.messageContent, @required this.messageType});
+  Widget widget;
+  ChatMessage({
+    @required this.widget,
+    @required this.messageContent,
+    @required this.messageType,
+  });
 }
 
 class SpeechScreen extends StatefulWidget {
@@ -114,14 +122,55 @@ class SpeechScreenState extends State<SpeechScreen> {
 
   List<ChatMessage> messages = [
     ChatMessage(
+        widget: Text(
+          "Hallo, wie kann ich dir helfen?",
+          style: TextStyle(fontSize: 15),
+        ),
         messageContent: "Hallo, wie kann ich dir helfen?",
         messageType: "receiver"),
   ];
 
-  void newQuestion(question) {
+  void newQuestion(String question) {
     setState(() {
+      /*Map<String, String> replacements = {
+        "plus": "+",
+        "minus": "-",
+        "geteilt durch": "/",
+        "mal": "*",
+        "klammer auf": "(",
+        "klammer zu": ")",
+        "klammer": "(",
+        "berechne": "",
+        "rechne": "",
+        "Wieviel ist": "",
+        "Wie viel ist": "",
+        "Was ist": ""
+      };
+      replacements.forEach((k, v) {
+        question = question.replaceAll(k, v);
+      });
+      if (question.contains(new RegExp(r'[0-9]'))) {
+        print("Match");
+        messages.add(
+          ChatMessage(
+              widget: CaTeX(question),
+              messageContent: question,
+              messageType: "sender"),
+        );
+      } else {
+        print("No match");
+        messages.add(
+          ChatMessage(
+              widget: Text(question),
+              messageContent: question,
+              messageType: "sender"),
+        );
+      }*/
       messages.add(
-        ChatMessage(messageContent: question, messageType: "sender"),
+        ChatMessage(
+            widget: Text(question),
+            messageContent: question,
+            messageType: "sender"),
       );
       loading = true;
       lastWords = "";
@@ -132,7 +181,12 @@ class SpeechScreenState extends State<SpeechScreen> {
             var ttsResult = flutterTts.speak(answer.capitalize());
             messages.add(
               ChatMessage(
-                  messageContent: answer.capitalize(), messageType: "receiver"),
+                  widget: Text(
+                    answer.capitalize(),
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  messageContent: answer.capitalize(),
+                  messageType: "receiver"),
             );
             loading = false;
           });
@@ -195,101 +249,196 @@ class SpeechScreenState extends State<SpeechScreen> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        reverse: true,
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 150.0),
-          child: Column(
-            children: [
-              ListView.builder(
-                itemCount: messages.length,
-                shrinkWrap: true,
-                padding: EdgeInsets.only(top: 10, bottom: 10),
-                physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {
-                      if (messages[index].messageType == "sender") {
-                        newQuestion(messages[index].messageContent);
-                      }
-                    },
-                    child: Container(
-                      padding: EdgeInsets.only(
-                          left: 0, right: 0, top: 10, bottom: 10),
-                      child: Align(
-                        alignment: (messages[index].messageType == "receiver"
-                            ? Alignment.topLeft
-                            : Alignment.topRight),
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          SingleChildScrollView(
+            reverse: false,
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 150.0),
+              child: Column(
+                children: [
+                  ListView.builder(
+                    itemCount: messages.length,
+                    shrinkWrap: true,
+                    padding: EdgeInsets.only(top: 10, bottom: 10),
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                        onTap: () {
+                          if (messages[index].messageType == "sender") {
+                            newQuestion(messages[index].messageContent);
+                          }
+                        },
                         child: Container(
-                          constraints:
-                              BoxConstraints(minWidth: 10, maxWidth: 250),
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                messages[index].messageType == "receiver"
-                                    ? BorderRadius.only(
-                                        topRight: Radius.circular(10.0),
-                                        bottomLeft: Radius.circular(15.0),
-                                        bottomRight: Radius.circular(10.0),
-                                      )
-                                    : BorderRadius.only(
-                                        topLeft: Radius.circular(10.0),
-                                        bottomLeft: Radius.circular(10.0),
-                                        bottomRight: Radius.circular(15.0),
-                                      ),
-                            color: (messages[index].messageType == "receiver"
-                                ? Colors.orange
-                                : Colors.blue[200]),
-                          ),
-                          padding: EdgeInsets.all(16),
-                          child: Text(
-                            messages[index].messageContent,
-                            style: TextStyle(fontSize: 15),
+                          padding: EdgeInsets.only(
+                              left: 0, right: 0, top: 10, bottom: 10),
+                          child: Align(
+                            alignment:
+                                (messages[index].messageType == "receiver"
+                                    ? Alignment.topLeft
+                                    : Alignment.topRight),
+                            child: Container(
+                              constraints:
+                                  BoxConstraints(minWidth: 10, maxWidth: 250),
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    messages[index].messageType == "receiver"
+                                        ? BorderRadius.only(
+                                            topRight: Radius.circular(10.0),
+                                            bottomLeft: Radius.circular(15.0),
+                                            bottomRight: Radius.circular(10.0),
+                                          )
+                                        : BorderRadius.only(
+                                            topLeft: Radius.circular(10.0),
+                                            bottomLeft: Radius.circular(10.0),
+                                            bottomRight: Radius.circular(15.0),
+                                          ),
+                                color:
+                                    (messages[index].messageType == "receiver"
+                                        ? Colors.orange
+                                        : Colors.blue[200]),
+                              ),
+                              padding: EdgeInsets.all(16),
+                              child: messages[index].widget,
+                            ),
                           ),
                         ),
-                      ),
+                      );
+                    },
+                  ),
+                  Text(
+                    lastWords,
+                    style: const TextStyle(
+                      fontSize: 32.0,
+                      fontWeight: FontWeight.w400,
                     ),
-                  );
-                },
+                  ),
+                  Align(
+                      alignment: FractionalOffset.bottomCenter,
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: 10.0),
+                        child: Visibility(
+                          child: SpinKitWave(
+                            color: Colors.orange,
+                            size: 50.0,
+                          ),
+                          maintainSize: true,
+                          maintainAnimation: true,
+                          maintainState: true,
+                          visible: (loading ? true : false),
+                        ),
+                      )),
+                  /*DropdownButton(
+                    onChanged: (selectedVal) => _switchLang(selectedVal),
+                    value: _currentLocaleId,
+                    items: _localeNames
+                        .map(
+                          (localeName) => DropdownMenuItem(
+                            value: localeName.localeId,
+                            child: Text(localeName.name),
+                          ),
+                        )
+                        .toList(),
+                  ),*/
+                ],
               ),
-              Text(
-                lastWords,
-                style: const TextStyle(
-                  fontSize: 32.0,
-                  fontWeight: FontWeight.w400,
+            ),
+          ),
+          Positioned(
+            bottom: -20,
+            left: -20,
+            child: Hero(
+              tag: "button2",
+              child: Container(
+                width: 80,
+                height: 80,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.orange,
+                  gradient: RadialGradient(
+                      colors: [Color(0xfffbb448), Color(0xffe46b10)]),
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).backgroundColor.withOpacity(0.5),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: Offset(0, 3), // changes position of shadow
+                    ),
+                  ],
                 ),
               ),
-              Align(
-                  alignment: FractionalOffset.bottomCenter,
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 10.0),
-                    child: Visibility(
-                      child: SpinKitWave(
-                        color: Colors.orange,
-                        size: 50.0,
-                      ),
-                      maintainSize: true,
-                      maintainAnimation: true,
-                      maintainState: true,
-                      visible: (loading ? true : false),
-                    ),
-                  )),
-              /*DropdownButton(
-                onChanged: (selectedVal) => _switchLang(selectedVal),
-                value: _currentLocaleId,
-                items: _localeNames
-                    .map(
-                      (localeName) => DropdownMenuItem(
-                        value: localeName.localeId,
-                        child: Text(localeName.name),
-                      ),
-                    )
-                    .toList(),
-              ),*/
-            ],
+            ),
           ),
-        ),
+          Positioned(
+            bottom: 00,
+            left: 00,
+            child: IconButton(
+              icon: Icon(
+                Icons.keyboard,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                mathInput(context);
+                //Navigator.pushNamed(context, '/welcome');
+              },
+            ),
+          ),
+        ],
       ),
     );
+  }
+
+  String finalValue = "";
+  Future<void> mathInput(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Mathematik Formel Eingabe"),
+            content: MathField(
+              // No parameters are required.
+              decoration: const InputDecoration(
+                labelText: 'Mathe Formel',
+                filled: true,
+                border: OutlineInputBorder(),
+              ), // Decorate the input field using the familiar InputDecoration.
+              onChanged: (String value) {
+                finalValue = value;
+              }, // Respond to changes in the input field.
+              onSubmitted: (String value) {
+                finalValue = value;
+              }, // Respond to the user submitting their input.
+              autofocus:
+                  true, // Enable or disable autofocus of the input field.
+            ),
+            actions: <Widget>[
+              FlatButton(
+                color: Colors.red,
+                textColor: Colors.white,
+                child: Text('Abbrechen'),
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+              FlatButton(
+                color: Colors.green,
+                textColor: Colors.white,
+                child: Text('Speichern'),
+                onPressed: () {
+                  setState(() {
+                    final mathExpression = TeXParser(finalValue).parse();
+                    newQuestion(mathExpression.toString());
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+            ],
+          );
+        });
   }
 
   Widget title() {

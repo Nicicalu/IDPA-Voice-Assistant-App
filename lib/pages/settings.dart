@@ -146,47 +146,6 @@ class SettingsPageState extends State<SettingsPage> {
                 ),
               ],
             ),
-          ),
-          Positioned(
-            bottom: -20,
-            left: -20,
-            child: Hero(
-              tag: "button1",
-              child: Container(
-                width: 80,
-                height: 80,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Colors.orange,
-                  gradient: RadialGradient(
-                      colors: [Color(0xfffbb448), Color(0xffe46b10)]),
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Theme.of(context).backgroundColor.withOpacity(0.5),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 00,
-            left: 00,
-            child: IconButton(
-              icon: Icon(
-                Icons.logout,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                showAlertDialog(context, "Abmelden nicht möglich",
-                    "Du kannst nich nicht abmelden, da kein Login System eingebaut wurde.");
-                //Navigator.pushNamed(context, '/welcome');
-              },
-            ),
           )
         ],
       ),

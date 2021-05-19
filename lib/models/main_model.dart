@@ -30,7 +30,7 @@ Future<String> getAnswer(String text) async {
   // make POST request
   var response = await http
       .post(url, headers: headers, body: json)
-      .timeout(Duration(seconds: 10));
+      .timeout(Duration(seconds: 20));
   // check the status code for the result
   int statusCode = response.statusCode;
 
