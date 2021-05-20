@@ -130,7 +130,7 @@ class SpeechScreenState extends State<SpeechScreen> {
         messageType: "receiver"),
   ];
 
-  void newQuestion(String question) {
+  void newQuestion(String question, {String math = ""}) {
     setState(() {
       /*Map<String, String> replacements = {
         "plus": "+",
@@ -148,12 +148,15 @@ class SpeechScreenState extends State<SpeechScreen> {
       };
       replacements.forEach((k, v) {
         question = question.replaceAll(k, v);
-      });
+      });*/
       if (question.contains(new RegExp(r'[0-9]'))) {
+        //math = true;
+      }
+      if (math != "") {
         print("Match");
         messages.add(
           ChatMessage(
-              widget: CaTeX(question),
+              widget: CaTeX(math),
               messageContent: question,
               messageType: "sender"),
         );
@@ -165,13 +168,7 @@ class SpeechScreenState extends State<SpeechScreen> {
               messageContent: question,
               messageType: "sender"),
         );
-      }*/
-      messages.add(
-        ChatMessage(
-            widget: Text(question),
-            messageContent: question,
-            messageType: "sender"),
-      );
+      }
       loading = true;
       lastWords = "";
     });
@@ -431,7 +428,7 @@ class SpeechScreenState extends State<SpeechScreen> {
                 onPressed: () {
                   setState(() {
                     final mathExpression = TeXParser(finalValue).parse();
-                    newQuestion(mathExpression.toString());
+                    newQuestion(mathExpression.toString(), math: finalValue);
                     Navigator.pop(context);
                   });
                 },
