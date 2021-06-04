@@ -23,7 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_tts:
+  flutter_tts: any
   cupertino_icons: any
   speech_to_text: 4.0.0-nullsafety 
     #path: ../speech_to_text

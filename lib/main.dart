@@ -95,7 +95,7 @@ class SpeechScreenState extends State<SpeechScreen> {
   }
 
   Future<void> initSpeechState() async {
-    await flutterTts.setVoice({"name": "de-de-x-nfh-local", "locale": "de-DE"});
+    //await flutterTts.setVoice({"name": "de-de-x-nfh-local", "locale": "de-DE"});
     await flutterTts.setSpeechRate(1);
     await flutterTts.setPitch(1);
 
