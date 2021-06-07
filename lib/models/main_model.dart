@@ -5,6 +5,7 @@ import 'package:voice_assistant/pages/settings.dart';
 import 'package:voice_assistant/helper/globals.dart' as globals;
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 Future<String> getAnswer(String text) async {
   globals.debugText = globals.debugText + " Determine Position|";
@@ -12,6 +13,10 @@ Future<String> getAnswer(String text) async {
   globals.debugText = globals.debugText + " Building URL|";
   // set up POST request arguments
   String url = 'https://idpa-303108.ew.r.appspot.com/API/answer';
+  if (kIsWeb) {
+    url = "https://tools.k26.ch/cors/proxy.php?csurl=" +
+        url; // Benutze den HTTP Proxy für die Webseite --> Sonst gibt es CORS Probleme
+  }
   //String url = 'http://127.0.0.1:5000/API/answer';
   Map<String, String> headers = {"Content-type": "application/json"};
   String json =
