@@ -375,7 +375,7 @@ packages:
       name: speech_to_text
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0-nullsafety"
+    version: "4.2.1"
   speech_to_text_platform_interface:
     dependency: transitive
     description:

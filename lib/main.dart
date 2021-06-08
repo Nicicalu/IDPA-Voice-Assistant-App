@@ -548,7 +548,7 @@ class SpeechScreenState extends State<SpeechScreen> {
       lastWords = '${result.recognizedWords}'.capitalize();
     });
     if (result.finalResult) {
-      if (result.recognizedWords.contains("übersetze")) {
+      if (result.recognizedWords.toLowerCase().contains("übersetze")) {
         print("Ja");
         translatorInput(context, result.recognizedWords.capitalize());
       } else {
