@@ -338,13 +338,13 @@ class _Buttons extends StatelessWidget {
                             iconSize: 22,
                             onTap: () => controller.goBack(deleteMode: true),
                           )
-                        else if (config is PageButtonConfig)
+                        /*else if (config is PageButtonConfig)
                           _BasicButton(
                             flex: config.flex,
                             label: controller.secondPage ? '123' : 'f(x)',
                             onTap: controller.togglePage,
                             highlightLevel: 1,
-                          )
+                          )*/
                         else if (config is PreviousButtonConfig)
                           _NavigationButton(
                             flex: config.flex,

@@ -27,39 +27,42 @@ class SettingsPageState extends State<SettingsPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Card(
-                  elevation: 8.0,
-                  color: Colors.orange,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Color(0xfffbb448), Color(0xffe46b10)],
-                      ),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: ListTile(
-                      onTap: () {
-                        print("tab");
-                        _displayTextInputDialog(
-                            context, "name", "Name ändern", "Name");
-                      },
-                      title: Text(
-                        globals.getSetting("name"),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
+                Hero(
+                  tag: "button1",
+                  child: Card(
+                    elevation: 8.0,
+                    color: Colors.orange,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0)),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Color(0xfffbb448), Color(0xffe46b10)],
                         ),
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
-                      leading: CircleAvatar(
-                        //TODO: Bild lokal speichern (Copright beachten.)
-                        backgroundImage: NetworkImage(
-                            "https://www.vzpm.ch/fileadmin/bilder/personen/dummy_person.png"),
-                      ),
-                      trailing: Icon(
-                        Icons.edit,
-                        color: Colors.white,
+                      child: ListTile(
+                        onTap: () {
+                          print("tab");
+                          _displayTextInputDialog(
+                              context, "name", "Name ändern", "Name");
+                        },
+                        title: Text(
+                          globals.getSetting("name"),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        leading: CircleAvatar(
+                          //TODO: Bild lokal speichern (Copright beachten.)
+                          backgroundImage: NetworkImage(
+                              "https://www.vzpm.ch/fileadmin/bilder/personen/dummy_person.png"),
+                        ),
+                        trailing: Icon(
+                          Icons.edit,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),

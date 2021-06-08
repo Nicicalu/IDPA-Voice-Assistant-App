@@ -46,7 +46,8 @@ Future<String> getAnswer(String text) async {
 
   if (statusCode != 200) {
     print("--------------");
-    return "Keine Verbindung zum Server. Statuscode: " + statusCode.toString();
+    return "Keine Verbindung zum Server. Vergiss nicht, GPS und Internet zu aktivieren und der App Berechtigung für Mikrofon und Standort zu geben. Statuscode: " +
+        statusCode.toString();
   }
 
   // this API passes back the id of the new item added to the body
