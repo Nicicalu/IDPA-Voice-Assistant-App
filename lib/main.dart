@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:flutter/services.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
@@ -438,6 +439,47 @@ class SpeechScreenState extends State<SpeechScreen> {
         });
   }
 
+  String translatorvalue = "";
+  Future<void> translatorInput(
+      BuildContext context, String questionTillNow) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Übersetzer Eingabe"),
+            content: TextField(
+              // No parameters are required.
+              decoration: const InputDecoration(
+                labelText: 'Text zu übersetzen',
+                filled: true,
+                border: OutlineInputBorder(),
+              ), // Decorate the input field using the familiar InputDecoration.
+              onChanged: (String value) {
+                translatorvalue = value;
+              }, // Respond to changes in the input field.
+              onSubmitted: (String value) {
+                translatorvalue = value;
+              }, // Respond to the user submitting their input.
+              autofocus:
+                  true, // Enable or disable autofocus of the input field.
+            ),
+            actions: <Widget>[
+              FlatButton(
+                color: Colors.green,
+                textColor: Colors.white,
+                child: Text('Übersetzen'),
+                onPressed: () {
+                  setState(() {
+                    newQuestion(questionTillNow + "|" + translatorvalue);
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+            ],
+          );
+        });
+  }
+
   Widget title() {
     return Hero(
       tag: "title",
@@ -506,7 +548,13 @@ class SpeechScreenState extends State<SpeechScreen> {
       lastWords = '${result.recognizedWords}'.capitalize();
     });
     if (result.finalResult) {
-      newQuestion(result.recognizedWords.capitalize());
+      if (result.recognizedWords.contains("übersetze")) {
+        print("Ja");
+        translatorInput(context, result.recognizedWords.capitalize());
+      } else {
+        print("Nein");
+        newQuestion(result.recognizedWords.capitalize());
+      }
     }
   }
 

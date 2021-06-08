@@ -30,7 +30,6 @@ Future<String> getAnswer(String text) async {
           globals.getSetting("name") +
           '"}}';
 
-  print(json);
   globals.debugText = globals.debugText + " Sending Request: '" + json + "' |";
   // make POST request
   var response = await http
