@@ -57,7 +57,7 @@ class SettingsPageState extends State<SettingsPage> {
                         leading: CircleAvatar(
                           //TODO: Bild lokal speichern (Copright beachten.)
                           backgroundImage: NetworkImage(
-                              "https://www.vzpm.ch/fileadmin/bilder/personen/dummy_person.png"),
+                              "https://idpa.k26.ch/dummy_person.png"),
                         ),
                         trailing: Icon(
                           Icons.edit,
@@ -75,7 +75,7 @@ class SettingsPageState extends State<SettingsPage> {
                       borderRadius: BorderRadius.circular(10.0)),
                   child: Column(
                     children: <Widget>[
-                      ListTile(
+                      /*ListTile(
                         leading: Icon(
                           Icons.lock_outline,
                           color: Colors.orange,
@@ -84,7 +84,7 @@ class SettingsPageState extends State<SettingsPage> {
                         trailing: Icon(Icons.keyboard_arrow_right),
                         onTap: () {},
                       ),
-                      _buildDivider(),
+                      _buildDivider(),*/
                       ListTile(
                         leading: Icon(
                           Icons.person,
