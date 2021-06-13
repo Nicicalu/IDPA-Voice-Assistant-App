@@ -138,7 +138,7 @@ class _MathFieldState extends State<MathField> with TickerProviderStateMixin {
   List<String> get _variables => [
         r'\pi',
         'e',
-        ...widget.variables,
+        //...widget.variables,
       ];
 
   @override
