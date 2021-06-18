@@ -9,7 +9,17 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 Future<String> getAnswer(String text) async {
   globals.debugText = globals.debugText + " Determine Position|";
-  Position position = await determinePosition().timeout(Duration(seconds: 10));
+  String longitude;
+  String latitude;
+  try {
+    Position position =
+        await determinePosition().timeout(Duration(seconds: 10));
+    longitude = position.longitude.toString();
+    latitude = position.latitude.toString();
+  } catch (error) {
+    longitude = "0";
+    latitude = "0";
+  }
   globals.debugText = globals.debugText + " Building URL|";
   // set up POST request arguments
   String url = 'https://idpa-303108.ew.r.appspot.com/API/answer';
@@ -21,9 +31,9 @@ Future<String> getAnswer(String text) async {
   Map<String, String> headers = {"Content-type": "application/json"};
   String json =
       '{"question": "$text", "properties": {  "location": {    "longitude": ' +
-          position.longitude.toString() +
+          longitude +
           ',     "latitude": ' +
-          position.latitude.toString() +
+          latitude +
           '}, "schuelernr": "' +
           globals.getSetting("schuelernr") +
           '","name": "' +
