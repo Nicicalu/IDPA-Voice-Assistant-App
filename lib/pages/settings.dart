@@ -166,35 +166,6 @@ class SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget title() {
-    return Hero(
-      tag: "title",
-      child: RichText(
-        textAlign: TextAlign.center,
-        text: TextSpan(
-            style: GoogleFonts.portLligatSans(
-              textStyle: Theme.of(context).textTheme.headline4,
-              fontSize: 30,
-              fontWeight: FontWeight.w700,
-            ),
-            children: [
-              TextSpan(
-                text: 'BM ',
-                style: TextStyle(color: Color(0xffd95d00), fontSize: 30),
-              ),
-              TextSpan(
-                text: 'Voice ',
-                style: TextStyle(fontSize: 30),
-              ),
-              TextSpan(
-                text: 'Assistant',
-                style: TextStyle(color: Color(0xffd95d00), fontSize: 30),
-              ),
-            ]),
-      ),
-    );
-  }
-
   String valueText;
 
   TextEditingController _textFieldController =
@@ -248,6 +219,185 @@ class SettingsPageState extends State<SettingsPage> {
             ],
           );
         });
+  }
+
+  Widget title() {
+    return Hero(
+      tag: "title",
+      child: RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+            style: GoogleFonts.portLligatSans(
+              textStyle: Theme.of(context).textTheme.headline4,
+              fontSize: 30,
+              fontWeight: FontWeight.w700,
+            ),
+            children: [
+              TextSpan(
+                text: 'BM ',
+                style: TextStyle(color: Color(0xffd95d00), fontSize: 30),
+              ),
+              TextSpan(
+                text: 'Voice ',
+                style: TextStyle(fontSize: 30),
+              ),
+              TextSpan(
+                text: 'Assistant',
+                style: TextStyle(color: Color(0xffd95d00), fontSize: 30),
+              ),
+            ]),
+      ),
+    );
+  }
+}
+
+class HelpPage extends StatefulWidget {
+  HelpPage({Key key}) : super(key: key);
+
+  @override
+  HelpPageState createState() => HelpPageState();
+}
+
+class HelpPageState extends State<HelpPage> {
+  // backing data
+  final helpInfo = {
+    "Wetter": [
+      "Wie ist das Wetter in {Stadt}",
+      "Wetterbericht {Stadt}",
+      "Wetter {Stadt}",
+      "Wetter in {Stadt}",
+      "Wie warm ist es in {Stadt}",
+      "Wie kalt ist es in {Stadt}",
+      "Wie ist die Temperatur in {Stadt}",
+      "Temperatur in {Stadt}",
+      "Wie ist die Luftfeuchtigkeit in {Stadt}",
+      "Luftfeuchtigkeit in {Stadt}",
+    ],
+    "Übersetzer": [
+      "Übersetze von {Sprache1} nach {Sprache2}",
+      "Übersetze von {Sprache1} zu {Sprache2}",
+      "Übersetze von {Sprache1} auf {Sprache2}",
+    ],
+    "Schnellantworten": [
+      "Datum",
+      "Welches Datum ist heute",
+      "Welcher Tag ist es heute",
+      "Wieviel Uhr ist es",
+      "Welche Uhrzeit ist es",
+      "Welche Zeit ist",
+      "Zahl zwischen {Zahl1} und {Zahl1}",
+      "Werfe einen Würfel",
+      "Werfe eine Münze",
+      "Münze werfen",
+    ],
+    "Stundeplan GBC": [
+      "Stundenplan",
+      "Wie lautet mein Stundenplan",
+      "Wann ist die nächste Lektion",
+      "nächste Lektion"
+    ]
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).backgroundColor,
+        title: SizedBox(
+          child: title(),
+        ),
+      ),
+      body: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          SingleChildScrollView(
+            physics: ScrollPhysics(),
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "Folgende Fragen versteht dein persönlicher BM Voice Assistant (Beispiele):",
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    //fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 20.0),
+                helpList(context),
+                const SizedBox(height: 60.0),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget helpList(BuildContext context) {
+    return ListView.builder(
+        physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: 1,
+        itemBuilder: (context, index) {
+          return Column(
+            children: [
+              Text(
+                helpInfo.keys.elementAt(index),
+                style: TextStyle(
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.orange,
+                ),
+              ),
+              SingleChildScrollView(
+                physics: ScrollPhysics(),
+                child: ListView.separated(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: helpInfo[helpInfo.keys.elementAt(index)].length,
+                    itemBuilder: (context, index2) {
+                      return ListTile(
+                        title: Text(
+                            helpInfo[helpInfo.keys.elementAt(index)][index2]),
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return Divider();
+                    }),
+              ),
+            ],
+          );
+        });
+  }
+
+  Widget title() {
+    return Hero(
+      tag: "title",
+      child: RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+            style: GoogleFonts.portLligatSans(
+              textStyle: Theme.of(context).textTheme.headline4,
+              fontSize: 30,
+              fontWeight: FontWeight.w700,
+            ),
+            children: [
+              TextSpan(
+                text: 'BM ',
+                style: TextStyle(color: Color(0xffd95d00), fontSize: 30),
+              ),
+              TextSpan(
+                text: 'Voice ',
+                style: TextStyle(fontSize: 30),
+              ),
+              TextSpan(
+                text: 'Assistant',
+                style: TextStyle(color: Color(0xffd95d00), fontSize: 30),
+              ),
+            ]),
+      ),
+    );
   }
 }
 

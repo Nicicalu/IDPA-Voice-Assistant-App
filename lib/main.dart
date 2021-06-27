@@ -48,7 +48,8 @@ class MyApp extends StatelessWidget {
         '/welcome': (context) => WelcomePage(),
         '/login': (context) => LoginPage(),
         '/signup': (context) => SignUpPage(),
-        '/settings': (context) => SettingsPage()
+        '/settings': (context) => SettingsPage(),
+        '/help': (context) => HelpPage()
       },
     );
   }
@@ -204,6 +205,17 @@ class SpeechScreenState extends State<SpeechScreen> {
           child: title(),
         ),
         actions: <Widget>[
+          Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/help');
+                },
+                child: Icon(
+                  Icons.help,
+                  size: 26.0,
+                ),
+              )),
           Padding(
               padding: EdgeInsets.only(right: 20.0),
               child: GestureDetector(
