@@ -295,6 +295,45 @@ class HelpPageState extends State<HelpPage> {
       "Wie lautet mein Stundenplan",
       "Wann ist die nächste Lektion",
       "nächste Lektion"
+    ],
+    "Witze": [
+      "Erzähle mir einen Witz",
+      "Witz",
+      "Scherz",
+      "Bring mich zum lachen"
+    ],
+    "Wortdefinitionen": [
+      "Definition von {Wort}",
+      "Wortdefinition von {Wort}",
+      "Was bedeutet {Wort}"
+    ],
+    "Wikipedia": [
+      "Was ist ein {Wort}",
+      "Was ist {Wort}",
+      "Wer ist {Wort}",
+      "Wo ist {Ort}"
+    ],
+    "Fahrplan": [
+      "Wo ist die nächste Haltestelle",
+      "Wann fährt der nächste {Transportmittel} von {Startort} nach {Zielort}",
+      "Wann fährt ein {Transportmittel} von {Startort} nach {Zielort}",
+      "Wann fährt der nächste {Transportmittel} nach {Zielort}",
+      "Fahrplan",
+      "Wann fährt der nächste Bus",
+      "Wann fährt der nächste Zug",
+      "Verbindungen"
+    ],
+    "Währungsrechner": [
+      "Rechne {Anzahl} {Währung 1} in {Währung 2} um",
+      "Wandle {Anzahl} {Währung 1} in {Währung 2} um",
+      "Wieviel sind {Anzahl} {Währung 1} in {Währung 2}",
+      "Wieviel {Währung 1} sind {Anzahl} {Währung 2}"
+    ],
+    "Taschenrechner": [
+      "Berechne 5 geteilt durch 2 mal 5 minus 3",
+      "Berechne pi mal 5",
+      "2 + 2",
+      "5 * 5 / 2(3-2)"
     ]
   };
 
@@ -341,15 +380,19 @@ class HelpPageState extends State<HelpPage> {
         itemCount: helpInfo.length,
         itemBuilder: (context, index) {
           return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(height: 20.0),
               Text(
                 helpInfo.keys.elementAt(index),
+                textAlign: TextAlign.left,
                 style: TextStyle(
                   fontSize: 22.0,
                   fontWeight: FontWeight.bold,
                   color: Colors.orange,
                 ),
               ),
+              const SizedBox(height: 20.0),
               SingleChildScrollView(
                 physics: ScrollPhysics(),
                 child: ListView.separated(
