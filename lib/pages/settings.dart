@@ -338,7 +338,7 @@ class HelpPageState extends State<HelpPage> {
     return ListView.builder(
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
-        itemCount: 1,
+        itemCount: helpInfo.length,
         itemBuilder: (context, index) {
           return Column(
             children: [
